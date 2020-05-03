@@ -1,0 +1,68 @@
+version: '3'
+
+networks:
+    calculator:
+
+services:
+    api-gateway:
+        build: ./api-gateway
+        networks:
+          - calculator
+        ports:
+          - '5000:5000'
+        environment:
+          - ADDITION_SERVICE_URL=addition-service:3000
+          - MULTIPLICATION_SERVICE_URL=multiplication-service
+          - DIVISON_SERVICE_URL=division-service:3002            
+          - SUBSTRACTION_SERVICE_URL=substraction-webserver:3003
+
+    addition-service:
+        build: ./addition-service
+        networks:
+          - calculator
+        ports:
+          - '3000:3000'
+
+    multiplication-service:
+        build: ./multiplication-service
+        command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+        ports:
+          - '3001:3001'
+        networks:
+            - calculator
+
+    division-service:
+        build: ./division-service
+        networks:
+          - calculator
+        ports:
+          - '3002:3002'
+
+    substraction-service:
+        build: ./substraction-service
+        image: substraction-service
+        container_name: substraction-service
+        restart: unless-stopped
+        tty: true
+        environment:
+          SERVICE_NAME: app
+          SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+          - ./substraction-service:/var/www
+          - ./substraction-service/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - calculator
+
+    substraction-webserver:
+        image: nginx:alpine
+        container_name: substraction-webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+          - "3003:80"
+        volumes:
+          - ./substraction-service:/var/www
+          - ./substraction-service/nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+          - calculator
