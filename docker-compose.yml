@@ -11,10 +11,10 @@ services:
         ports:
           - '5000:5000'
         environment:
-          - ADDITION_SERVICE_URL=addition-service:3000
-          - MULTIPLICATION_SERVICE_URL=multiplication-service:3001
-          - DIVISON_SERVICE_URL=division-service:3002
-          - SUBSTRACTION_SERVICE_URL=substraction-webserver:3003
+          - ADDITION_SERVICE_URL=http://addition-service:3000
+          - MULTIPLICATION_SERVICE_URL=http://multiplication-service:3001
+          - DIVISON_SERVICE_URL=http://division-service:3002
+          - SUBSTRACTION_SERVICE_URL=http://substraction-webserver:3003
 
     addition-service:
         build: ./addition-service
