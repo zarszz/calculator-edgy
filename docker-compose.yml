@@ -12,8 +12,8 @@ services:
           - '5000:5000'
         environment:
           - ADDITION_SERVICE_URL=addition-service:3000
-          - MULTIPLICATION_SERVICE_URL=multiplication-service
-          - DIVISON_SERVICE_URL=division-service:3002            
+          - MULTIPLICATION_SERVICE_URL=multiplication-service:3001
+          - DIVISON_SERVICE_URL=division-service:3002
           - SUBSTRACTION_SERVICE_URL=substraction-webserver:3003
 
     addition-service:
