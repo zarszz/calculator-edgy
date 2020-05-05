@@ -1,10 +1,15 @@
 from flask import Flask, request, Response
 
 import json
+import os
 import requests
 
 app = Flask(__name__)
 
+ADDITION_SERVICE_URL = os.environ.get('ADDITION_SERVICE_URL') or 'http://localhost:3000/addition'
+MULTIPLICATION_SERVICE_URL = os.environ.get('MULTIPLICATION_SERVICE_URL') or 'http://localhost:3001/multiplication'
+DIVISON_SERVICE_URL = os.environ.get('DIVISON_SERVICE_URL') or 'http://localhost:3002/division'
+SUBSTRACTION_SERVICE_URL = os.environ.get('SUBSTRACTION_SERVICE_URL') or 'http://localhost:3003/substraction'
 
 @app.route('/')
 def index():
@@ -14,28 +19,28 @@ def index():
 def addition_service():
     data = request.get_json(force=True)
     req_data = generate_req_data(data['number1'], data['number2'])
-    return requests.post('http://localhost:3000/addition', req_data).json()
+    return requests.post(ADDITION_SERVICE_URL, req_data).json()
 
 
 @app.route('/multiplication', methods=['POST'])
 def multiplication_service():
     data = request.get_json(force=True)
     req_data = generate_req_data(data['number1'], data['number2'])
-    return requests.post('http://localhost:3001/multiplication', req_data).json()
+    return requests.post(MULTIPLICATION_SERVICE_URL, req_data).json()
 
 
 @app.route('/division', methods=['POST'])
 def division_service():
     data = request.get_json(force=True)
     req_data = generate_req_data(data['number1'], data['number2'])
-    return requests.post('http://localhost:3002/division', json.dumps(req_data)).json()
+    return requests.post(DIVISON_SERVICE_URL, json.dumps(req_data)).json()
 
 
 @app.route('/substraction', methods=['POST'])
 def substraction_service():
     data = request.get_json(force=True)
     req_data = generate_req_data(data['number1'], data['number2'])
-    return requests.post('http://localhost:3003/substraction', req_data).json()
+    return requests.post(SUBSTRACTION_SERVICE_URL, req_data).json()
 
 
 def generate_req_data(number1, number2):
